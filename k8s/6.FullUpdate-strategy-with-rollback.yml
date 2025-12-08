@@ -1,0 +1,53 @@
+apiVersion: apps/v1 #version of the API to use
+kind: Deployment #What kind of object we're deploying
+metadata: #information about our object we're deploying
+  name: nginx-deployment1 #Name of the deployment
+  labels: #A tag on the deployments created
+    app: nginxd
+spec: #specifications for our object
+  strategy:
+    type: RollingUpdate
+    rollingUpdate: #Update Pods a certain number at a time
+      maxUnavailable: 1 #Total number of pods that can be unavailable at once
+      maxSurge: 1 #Maximum number of pods that can be deployed above desired state
+  replicas: 6 #The number of pods that should always be running
+  selector: #which pods the replica set should be responsible for
+    matchLabels:
+      app: nginx2 #any pods with labels matching this I'm responsible for.
+  template: #The pod template that gets deployed
+    metadata:
+      labels: #A tag on the replica sets created
+        app: nginx2
+    spec:
+      containers:
+        - name: nginx-container #the name of the container within the pod
+          #image: nginx:1.16.1 #which container image should be pulled
+          image: nginxdemos/hello:0.4-plain-text #which container image should be pulled
+          ports:
+            - containerPort: 80 #the port of the container within the pod
+
+
+#kubectl apply -f deploy.yaml --record=true
+  #       observe strategy type as rollingUpdate:
+  # update image to new version
+  #        kubectl set image deploy nginx-deployment nginx-container=nginx:latest1 --record
+  #         kubectl rollout status deployment/nginx-deployment
+  #        kubectl get deploy
+
+  # rollback
+  #       kubectl set image deploy nginx-deploy nginx-container=nginx:latest --record
+  #       kubectl rollout status deployment/nginx-deployment
+  #       kubectl rollout history deployment/nginx-deployment
+  #       kubectl rollout undo deployment/nginx-deployment
+  #       kubectl rollout undo deployment/nginx-deployment --to-revision=1
+  #      kubectl rollout status deployment/nginx-deployment
+  #     kubectl scale deploy nginx-deploy --replicas=5
+  #     kubectl get deploy
+  #     kubectl get po
+
+  #      kubectl scale deploy nginx-deploy --replicas=1
+  #     kubectl get deploy
+  #      kubectl get po
+
+  #     kubectl delete -f deploy.yml
+  #     https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
