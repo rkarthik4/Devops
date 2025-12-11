@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: echo-exkube
+  namespace: exkube
+spec:
+  replicas: 3
+  selector:c
+    matchLabels:
+      app: echo-studentx
+  template:
+    metadata:
+      labels:
+        app: echo-studentx
+    spec:
+      containers:
+        - name: echo-exkube-cont
+          image: registry.k8s.io/echoserver:1.9
+          ports:
+            - containerPort: 8080
+

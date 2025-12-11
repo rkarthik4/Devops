@@ -1,0 +1,18 @@
+- name: p1 - create supportuser in all managed nodes
+  hosts: allservers
+  tasks:
+    - name: create user supportuser
+      ansible.builtin.user:
+        name: supportuser
+        state: present
+
+    - name: create/copy sudoers file for supportuser
+      ansible.builtin.copy:
+        dest: /etc/sudoers.d/supportuser
+        content: "supportuser ALL=(ALL) NOPASSWD:ALL"
+
+- name: p2 - create disk report in all managed nodes
+  hosts: allservers
+  tasks:
+    - name: create disk report
+      ansible.builtin.shell: "df -h > /tmp/diskreport.txt"
